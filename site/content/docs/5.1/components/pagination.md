@@ -122,7 +122,7 @@ Fancy larger or smaller pagination? Add `.pagination-lg` or `.pagination-sm` for
 
 ## Alignment
 
-Change the alignment of pagination components with [flexbox utilities]({{< docsref "/utilities/flex" >}}).
+Change the alignment of pagination components with [flexbox utilities]({{< docsref "/utilities/flex" >}}). For example, with `.justify-content-center`:
 
 {{< example >}}
 <nav aria-label="Page navigation example">
@@ -140,6 +140,8 @@ Change the alignment of pagination components with [flexbox utilities]({{< docsr
 </nav>
 {{< /example >}}
 
+Or with `.justify-content-end`:
+
 {{< example >}}
 <nav aria-label="Page navigation example">
   <ul class="pagination justify-content-end">
@@ -156,12 +158,20 @@ Change the alignment of pagination components with [flexbox utilities]({{< docsr
 </nav>
 {{< /example >}}
 
-## Sass
+## CSS
 
 ### Variables
 
+{{< added-in "5.2.0" >}}
+
+As part of Bootstrap's evolving CSS variables approach, pagination now uses local CSS variables on `.pagination` for enhanced real-time customization. Values for the CSS variables are set via Sass, so Sass customization is still supported, too.
+
+{{< scss-docs name="pagination-css-vars" file="scss/_pagination.scss" >}}
+
+### Sass variables
+
 {{< scss-docs name="pagination-variables" file="scss/_variables.scss" >}}
 
-### Mixins
+### Sass mixins
 
 {{< scss-docs name="pagination-mixin" file="scss/mixins/_pagination.scss" >}}

@@ -35,18 +35,23 @@ Click the button below to show an alert (hidden with inline styles to start), th
 We use the following JavaScript to trigger our live alert demo:
 
 ```js
-var alertPlaceholder = document.getElementById('liveAlertPlaceholder')
-var alertTrigger = document.getElementById('liveAlertBtn')
+const alertPlaceholder = document.getElementById('liveAlertPlaceholder')
 
-function alert(message, type) {
-  var wrapper = document.createElement('div')
-  wrapper.innerHTML = '<div class="alert alert-' + type + ' alert-dismissible" role="alert">' + message + '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+const alert = (message, type) => {
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = [
+    `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+    `   <div>${message}</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    '</div>'
+  ].join('')
 
   alertPlaceholder.append(wrapper)
 }
 
+const alertTrigger = document.getElementById('liveAlertBtn')
 if (alertTrigger) {
-  alertTrigger.addEventListener('click', function () {
+  alertTrigger.addEventListener('click', () => {
     alert('Nice, you triggered this alert message!', 'success')
   })
 }
@@ -160,7 +165,7 @@ When an alert is dismissed, the element is completely removed from the page stru
 
 ### Variables
 
-<small class="d-inline-flex px-2 py-1 font-monospace text-muted border rounded-3">Added in v5.2.0</small>
+{{< added-in "5.2.0" >}}
 
 As part of Bootstrap's evolving CSS variables approach, alerts now use local CSS variables on `.alert` for enhanced real-time customization. Values for the CSS variables are set via Sass, so Sass customization is still supported, too.
 
@@ -189,10 +194,8 @@ Loop that generates the modifier classes with the `alert-variant()` mixin.
 Initialize elements as alerts
 
 ```js
-var alertList = document.querySelectorAll('.alert')
-var alerts = Array.prototype.slice.call(alertList).map(function (element) {
-  return new bootstrap.Alert(element)
-})
+const alertList = document.querySelectorAll('.alert')
+const alerts = [...alertList].map(element => new bootstrap.Alert(element))
 ```
 
 {{< callout info >}}
@@ -209,53 +212,27 @@ See the [triggers](#triggers) section for more details.
 
 ### Methods
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Method</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>close</code>
-      </td>
-      <td>
-        Closes an alert by removing it from the DOM. If the <code>.fade</code> and <code>.show</code> classes are present on the element, the alert will fade out before it is removed.
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>dispose</code>
-      </td>
-      <td>
-        Destroys an element's alert. (Removes stored data on the DOM element)
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>getInstance</code>
-      </td>
-      <td>
-        Static method which allows you to get the alert instance associated to a DOM element, you can use it like this: <code>bootstrap.Alert.getInstance(alert)</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>getOrCreateInstance</code>
-      </td>
-      <td>
-        Static method which returns an alert instance associated to a DOM element or create a new one in case it wasn't initialized.
-        You can use it like this: <code>bootstrap.Alert.getOrCreateInstance(element)</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
+You can create an alert instance with the alert constructor, for example:
 
 ```js
-var alertNode = document.querySelector('.alert')
-var alert = bootstrap.Alert.getInstance(alertNode)
+const bsAlert = new bootstrap.Alert('#myAlert')
+```
+
+This makes an alert listen for click events on descendant elements which have the `data-bs-dismiss="alert"` attribute. (Not necessary when using the data-api’s auto-initialization.)
+
+{{< bs-table >}}
+| Method | Description |
+| --- | --- |
+| `close` | Closes an alert by removing it from the DOM. If the `.fade` and `.show` classes are present on the element, the alert will fade out before it is removed. |
+| `dispose` | Destroys an element's alert. (Removes stored data on the DOM element) |
+| `getInstance` | Static method which allows you to get the alert instance associated to a DOM element. For example: `bootstrap.Alert.getInstance(alert)`. |
+| `getOrCreateInstance` | Static method which returns an alert instance associated to a DOM element or create a new one in case it wasn't initialized. You can use it like this: `bootstrap.Alert.getOrCreateInstance(element)`. |
+{{< /bs-table >}}
+
+Basic usage:
+
+```js
+const alert = bootstrap.Alert.getOrCreateInstance('#myAlert')
 alert.close()
 ```
 
@@ -263,32 +240,16 @@ alert.close()
 
 Bootstrap's alert plugin exposes a few events for hooking into alert functionality.
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>Event</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>close.bs.alert</code></td>
-      <td>
-        Fires immediately when the <code>close</code> instance method is called.
-      </td>
-    </tr>
-    <tr>
-      <td><code>closed.bs.alert</code></td>
-      <td>
-        Fired when the alert has been closed and CSS transitions have completed.
-      </td>
-    </tr>
-  </tbody>
-</table>
+{{< bs-table >}}
+| Event | Description |
+| --- | --- |
+| `close.bs.alert` | Fires immediately when the `close` instance method is called. |
+| `closed.bs.alert` | Fired when the alert has been closed and CSS transitions have completed. |
+{{< /bs-table >}}
 
 ```js
-var myAlert = document.getElementById('myAlert')
-myAlert.addEventListener('closed.bs.alert', function () {
+const myAlert = document.getElementById('myAlert')
+myAlert.addEventListener('closed.bs.alert', event => {
   // do something, for instance, explicitly move focus to the most appropriate element,
   // so it doesn't get lost/reset to the start of the page
   // document.getElementById('...').focus()
